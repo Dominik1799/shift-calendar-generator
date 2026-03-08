@@ -11,7 +11,7 @@ SAVE_DIRECTORY = os.environ.get("SAVE_DIRECTORY", "./shift-plans")
 
 GOOGLE_SERVICE_ACCOUNT_JSON = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON", "EMPTY")
 GOOGLE_SERVICE_ACCOUNT_JSON: dict = json.loads(GOOGLE_SERVICE_ACCOUNT_JSON)
-print("GOOGLE_SERVICE_ACCOUNT_JSON:", GOOGLE_SERVICE_ACCOUNT_JSON)
+
 GOOGLE_CALENDAR_ID = os.environ.get("GOOGLE_CALENDAR_ID")
 GOOGLE_CALENDAR_SHIFT_EVENT_TITLE = os.environ.get("GOOGLE_CALENDAR_SHIFT_EVENT_TITLE", "Janka práca")
 # colors accorfing to https://gist.github.com/ansaso/accaddab0892a3b47d5f4884fda0468b#event-colors
