@@ -14,6 +14,6 @@ spec:
         spec:
           containers:
             - name: shift-calendar-generator
-              image: dominik9917/shift-calendar-generator:v-2
+              image: dominik9917/shift-calendar-generator:v-3
               imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure # Usually better than 'Never' for transient errors
