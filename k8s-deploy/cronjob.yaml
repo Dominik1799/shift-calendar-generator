@@ -14,7 +14,7 @@ spec:
         spec:
           containers:
             - name: shift-calendar-generator
-              image: dominik9917/shift-calendar-generator:v-5
+              image: dominik9917/shift-calendar-generator:v-6
               imagePullPolicy: IfNotPresent
               envFrom:
                 - configMapRef:
