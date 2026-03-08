@@ -13,7 +13,7 @@ spec:
       template:
         spec:
           containers:
-          - name: shift-calendar-generator
-            image: dominik9917/shift-calendar-generator:v-1
-            imagePullPolicy: IfNotPresent
+            - name: shift-calendar-generator
+              image: dominik9917/shift-calendar-generator:v-2
+              imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure # Usually better than 'Never' for transient errors
