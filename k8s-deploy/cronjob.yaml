@@ -4,7 +4,7 @@ metadata:
   name: shift-calendar-generator
   namespace: shift-calendar-generator
 spec:
-  schedule: "* * * * *"
+  schedule: "0,30 * * * *"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 1
