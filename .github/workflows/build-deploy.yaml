@@ -1,0 +1,61 @@
+name: Build and deploy shift-calendar-generator web app
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'k8s-deploy/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      CONTAINER_NAME: shift-calendar-generator
+      IMAGE_NAME: dominik9917/shift-calendar-generator
+      IMAGE_TAG: v-${{ github.run_number }}
+      TARGET_FILE_LOCATION: k8s-deploy/cronjob.yaml
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:latest
+
+      - name: Update Kubernetes deployment image tag
+        run: |
+          yq -i '
+            .spec.jobTemplate.spec.template.spec.containers[]
+            |= select(.name == "${{ env.CONTAINER_NAME }}")
+            .image = "${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}"
+          ' ${{ env.TARGET_FILE_LOCATION }}
+
+      - name: Commit and push manifest update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add ${{ env.TARGET_FILE_LOCATION }}
+          git commit -m "chore(gitops): update image tag to ${{ env.IMAGE_TAG }} [skip ci]" || echo "No changes to commit"
+          git push

@@ -1,0 +1,7 @@
+service-account-key.json
+*.env
+__pycache__/
+*.xlsx
+k8s-deploy/secret.yaml
+.vscode
+venv

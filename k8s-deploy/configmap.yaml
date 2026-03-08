@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shift-calendar-generator-configmap
+  namespace: shift-calendar-generator
+data:
+  SUBJECT_KEY_PREFIX: ((shift))
