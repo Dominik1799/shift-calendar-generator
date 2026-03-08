@@ -16,4 +16,9 @@ spec:
             - name: shift-calendar-generator
               image: dominik9917/shift-calendar-generator:v-4
               imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: shift-calendar-generator-configmap
+                - secretRef:
+                    name: shift-calendar-generator-secret
           restartPolicy: Never
