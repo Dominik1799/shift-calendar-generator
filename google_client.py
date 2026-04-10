@@ -3,6 +3,8 @@ import email
 import os
 import logging
 import pytz
+import unicodedata
+from email.header import decode_header
 from datetime import datetime, timedelta
 
 import settings
@@ -49,7 +51,20 @@ def get_latest_shift_report():
                     if part.get('Content-Disposition') is None:
                         continue
 
-                    filename = part.get_filename()
+                    raw_filename = part.get_filename()
+                    filename = None
+                    if raw_filename:
+                        decoded_parts = decode_header(raw_filename)
+                        filename = ''.join(
+                            part.decode(enc or 'utf-8') if isinstance(part, bytes) else part
+                            for part, enc in decoded_parts
+                        )
+                    assert filename is not None, "Filename could not be decoded or is missing."
+                    # normaize filename to NFC form to avoid issues with special characters on different OS
+                    # Does not remove diacritics, only normalizes them to a standard form, e.g. "á" remains "á", but is represented in a consistent way in the filesystem
+                    filename = unicodedata.normalize("NFC", filename)
+                    logger.info(f"Found attachment: {filename}")
+                    logger.info(f"Raw filename: {raw_filename} | Decoded: {filename}")
                     
                     # 3. Check if it's an .xlsx file
                     if filename and filename.lower().endswith('.xlsx'):
